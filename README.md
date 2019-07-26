@@ -2,6 +2,9 @@
 
 > This repo is a boilerplate for vue-templates-typescipt project. You could use it as a base to build your own web app.
 
+![avatar](http://wx4.sinaimg.cn/large/7ee06dc9ly1g5db7bte8ij216z0u0qjm.jpg)
+
+
 ## About
 
 由于需要了解整个Vue的生态，所以脚手架会定期更新，有好的建议欢迎PR，目前在我内部项目中广泛使用。
