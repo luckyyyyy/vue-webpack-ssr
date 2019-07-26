@@ -1,0 +1,67 @@
+{
+  "psi-header.changes-tracking": {
+    "isActive": true,
+    "exclude": [
+      "markdown",
+      "json",
+      "html",
+      "vue"
+    ],
+    "autoHeader": "off"
+  },
+  "psi-header.lang-config": [{
+      "language": "javascript",
+      "begin": "/**",
+      "prefix": " * ",
+      "end": " */"
+    },
+    {
+      "language": "typescript",
+      "mapTo": "javascript"
+    },
+    {
+      "language": "css",
+      "mapTo": "javascript"
+    },
+    {
+      "language": "less",
+      "mapTo": "javascript"
+    },
+    {
+      "language": "scss",
+      "mapTo": "javascript"
+    },
+    {
+      "language": "sass",
+      "mapTo": "javascript"
+    }
+  ],
+  "psi-header.templates": [{
+    "language": "*",
+    "template": [
+      "This file is part of the PerfMa.",
+      "@link     : http://perfma.com",
+      "@author   : <<author>> (<<authoremail>>)",
+      "@copyright: Copyright (c) 2019 Hangzhou perfma Network Technology Co., Ltd.",
+    ]
+  }],
+  "jumpToAliasFile.alias": {
+    "@": "${folder}/src",
+    ":": "${folder}/static"
+  },
+  "path-autocomplete.pathMappings": {
+    "@": "${folder}/src", // the absolute root folder is now /src,
+  },
+  "eslint.autoFixOnSave": true,
+  "eslint.validate": [
+    { "language": "typescript", "autoFix": true },
+    { "language": "typescriptreact", "autoFix": true },
+    { "language": "javascript", "autoFix": true },
+    { "language": "javascriptreact", "autoFix": true },
+    { "language": "vue", "autoFix": true }
+  ],
+  "eslint.options": {
+    "configFile": ".eslintrc.js"
+  },
+  "stylelint.enable": false // 还没有自动修复功能 先禁了
+}
