@@ -57,7 +57,7 @@ export default class Index extends Vue {
   @commonModule.Mutation
   private setText;
 
-  eslint-disable-next-line class-methods-use-this
+  /* eslint-disable-next-line class-methods-use-this */
   public serverPrefetch(): Promise<any> {
     return new Promise((resolve) => {
       console.log(`hoho serverPrefetch, \tserver: ${this.$isServer}`);
