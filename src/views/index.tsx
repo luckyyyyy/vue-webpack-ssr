@@ -41,6 +41,8 @@ export default class Index extends Vue {
         <h1>{ this.text }</h1>
         <Hello msg={this.msg} bug />
         <button onClick={this.onClick}>switch text</button>
+        <center><router-link to={{ path: '/404' }}>go to 404</router-link></center>
+
       </div>
     );
   }
