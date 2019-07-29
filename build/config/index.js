@@ -15,8 +15,8 @@ const isDevelop = process.env.NODE_ENV === 'development';
 const fullPath = s => path.join(__dirname, '..', '..', s);
 
 const defaultConfig = {
-  clientEntry: fullPath('src/entry/client.js'),
-  serverEntry: fullPath('src/entry/server.js'), // 一般不需要指定 除非SSR
+  clientEntry: fullPath('src/entry/client.ts'),
+  serverEntry: fullPath('src/entry/server.ts'), // 一般不需要指定 除非SSR
   env: {
     NODE_ENV: process.env.NODE_ENV,
     BUILD_TIME: isDevelop ? 'development' : moment().format('YMMDDHHmm'),

@@ -12,10 +12,12 @@ import commonModule, { CommonState } from './modules/common';
 
 Vue.use(Vuex);
 
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const createStore = (): Store<{
+export interface MStore {
   common: CommonState;
-}> => new Vuex.Store({
+}
+
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+export const createStore = (): Store<MStore> => new Vuex.Store({
   strict: isDevelop,
   modules: {
     common: commonModule,

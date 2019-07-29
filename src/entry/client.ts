@@ -28,15 +28,15 @@ router.onReady(() => {
   router.beforeResolve(async (to, from, next) => {
     const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
     const ignoreAuth = to.matched.some(record => record.meta.ignoreAuth);
-    if (requiresAuth && Object.keys(store.state.user.user).length === 0) {
-      // if (!ignoreAuth) {
-      //   try {
-      //     await store.dispatch('user/GET_USER');
-      //   } catch (err) {
-      //     // window.location.href = AUTH_URL;
-      //   }
-      // }
-    }
+    // if (requiresAuth && Object.keys(store.state.user.user).length === 0) {
+    // if (!ignoreAuth) {
+    //   try {
+    //     await store.dispatch('user/GET_USER');
+    //   } catch (err) {
+    //     // window.location.href = AUTH_URL;
+    //   }
+    // }
+    // }
     const matched = router.getMatchedComponents(to);
     const prevMatched = router.getMatchedComponents(from);
     let diffed = false;
@@ -50,7 +50,8 @@ router.onReady(() => {
       }
       return diffed;
     });
-    const asyncDataHooks = activated.map(c => c.asyncData).filter(_ => _);
+    // tsignore
+    const asyncDataHooks = activated.map(c => (c as any).asyncData).filter(_ => _);
     if (!asyncDataHooks.length) {
       return next();
     }
@@ -75,8 +76,7 @@ router.onReady(() => {
   });
   // 先挂上 第二次才轮到客户端
   app.$mount('#app');
-
-  Vue.mixin({
+  Vue.mixin(Vue.extend({
     beforeRouteUpdate(to, from, next) {
       const { asyncData } = this.$options;
       if (asyncData) {
@@ -102,7 +102,7 @@ router.onReady(() => {
       //     });
       //   }
     },
-  });
+  }));
 });
 
 // if (window.location.protocol === 'https:' && navigator.serviceWorker) {

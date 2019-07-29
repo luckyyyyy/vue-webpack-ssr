@@ -11,7 +11,7 @@ import createApp from '@/entry/main';
 // import { AUTH_URL, ROUTER_BASE } from '@/config';
 // import { setUtilParams } from '@/utils';
 
-const createError = (msg, obj) => {
+const createError = (msg, obj = {}): Error => {
   const err = new Error(msg);
   Object.assign(err, obj);
   return err;
@@ -51,7 +51,7 @@ export default context => new Promise(async (resolve, reject) => {
     }
     // setApiParams(request);
     // setUtilParams(request);
-    return Promise.all(matchedComponents.map(({ asyncData }) => asyncData && asyncData({
+    return Promise.all(matchedComponents.map((c: any) => c.asyncData && c.asyncData({
       store,
       route: router.currentRoute,
     }))).then(() => {
@@ -65,7 +65,7 @@ export default context => new Promise(async (resolve, reject) => {
       }
       if (err.response) {
         if (err.response.status === 401) {
-          return reject(createError({ url: `${AUTH_URL}?redirect_uri=${encodeURIComponent(context.url)}` }));
+          // return reject(createError({ url: `${AUTH_URL}?redirect_uri=${encodeURIComponent(context.url)}` }));
         }
         if (err.response.status === 403) {
           return reject(createError({ url: '/403' }));
