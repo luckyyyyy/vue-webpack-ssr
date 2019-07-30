@@ -21,17 +21,18 @@ export default class Index extends Vue {
   @commonModule.Mutation
   private setText;
 
+
   // eslint-disable-next-line class-methods-use-this
   // public serverPrefetch(): Promise<any> {
-  //   return new Promise((resolve) => {
+  //   return new Promise((resolve, reject) => {
   //     console.log(`hoho serverPrefetch, \tserver: ${this.$isServer}`);
-  //     setTimeout(() => resolve(), 200);
+  //     setTimeout(() => reject({ url: '/405' }), 200);
   //   });
   // }
 
   // public static asyncData({ store, route }): Promise<any> {
   //   return new Promise((resolve) => {
-  //     setTimeout(() => resolve(), 1000);
+  //     setTimeout(resolve, 100);
   //   });
   // }
 

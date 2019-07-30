@@ -5,6 +5,10 @@
  * @copyright: Copyright (c) 2019 Hangzhou perfma Network Technology Co., Ltd.
  */
 
+// 考虑下 cookie 的问题 怎么做 先这样
+// 考虑把 axios 和 vuex 做绑定 也可以顺便放到 asyncDataHooks 里面
+// 客户端和服务端要分开处理
+
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from 'axios';
 
 /**

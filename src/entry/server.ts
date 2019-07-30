@@ -7,6 +7,8 @@
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
 import createApp from '@/entry/main';
+import { NotFoundHttpException, ForbiddenHttpException, ServerErrorHttpException } from '@/utils/http/error';
+
 // import { setApiParams } from '$api'; // eslint-disable-line
 // import { AUTH_URL, ROUTER_BASE } from '@/config';
 // import { setUtilParams } from '@/utils';
@@ -20,6 +22,12 @@ const createError = (msg, obj = {}): Error => {
 // eslint-disable-next-line no-async-promise-executor
 export default context => new Promise(async (resolve, reject) => {
   const { request } = context;
+  // context.rendered = (c) => {
+  //   console.log(c);
+  // };
+  // context.rendered(() => {
+  //   console.log(123);
+  // });
   // setUtilParams(request);
   const { app, router, store } = createApp();
   let { url } = context;
@@ -56,28 +64,26 @@ export default context => new Promise(async (resolve, reject) => {
       route: router.currentRoute,
     }))).then(() => {
       context.state = store.state;
-      // setApiParams(request);
-      // setUtilParams(request);
       resolve(app);
     }).catch((err) => {
       if (err.url) {
-        return reject(err);
+        return reject(createError(err));
       }
       if (err.response) {
         if (err.response.status === 401) {
           // return reject(createError({ url: `${AUTH_URL}?redirect_uri=${encodeURIComponent(context.url)}` }));
         }
         if (err.response.status === 403) {
-          return reject(createError({ url: '/403' }));
+          return reject(new ForbiddenHttpException());
         }
         if (err.response.status === 404) {
-          return reject(createError({ url: '/404' }));
+          return reject(new NotFoundHttpException());
         }
         if (err.response.status >= 500) {
-          return reject(createError({ url: '/404' }));
+          return reject(new NotFoundHttpException());
         }
       }
-      return reject(createError({ code: 500 }));
+      return reject(new ServerErrorHttpException());
     });
   });
 });

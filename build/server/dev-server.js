@@ -153,30 +153,29 @@ serverCompiler.watch({}, (err, stats) => {
 })
 
 app.get('*', (req, res) => {
-  readyPromise.then(() => {
+  readyPromise.then(async () => {
     const s = Date.now();
     res.setHeader('Content-Type', 'text/html');
     res.setHeader('Server', serverInfo);
     const context = getContext(req);
-    renderer.renderToString(context, (err, html) => {
-      if (err) {
-        if (err.url) {
-          res.redirect(err.url);
-          res.end();
-        } else if (err.code === 404) {
-          res.status(404).send('404 | Page Not Found');
-        } else {
-          // Render Error Page or Redirect
-          res.status(500).send('500 | Internal Server Error');
-          console.error(`error during render : ${req.url}`);
-          console.error(err.stack);
-        }
+    try {
+      const html = await renderer.renderToString(context);
+      if (context.httpStatus) res.status(context.httpStatus);
+      res.send(html);
+      console.log(`whole request: ${Date.now() - s}ms \t${req.url}`);
+    } catch (err) {
+      if (err.url) {
+        res.redirect(err.url);
+        res.end();
+      } else if (typeof err.statusCode === 'number') {
+        res.status(err.statusCode).send(err.message);
       } else {
-        if (context.httpStatus) res.status(context.httpStatus);
-        res.send(html);
-        console.log(`whole request: ${Date.now() - s}ms \t${req.url}`);
+        // Render Error Page or Redirect
+        res.status(500).send('500 | Internal Server Error');
+        console.error(`error during render : ${req.url}`);
+        console.error(err.stack);
       }
-    });
+    }
   }).catch((err) => {
     res.end();
   });

@@ -12,7 +12,6 @@ import { isServer } from '@/utils';
 export default class Index extends Vue {
   private msg: string = '404 page, http status 404';
 
-
   public created(): void {
     if (isServer) {
       this.$ssrContext.httpStatus = 404;
