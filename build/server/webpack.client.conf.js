@@ -12,9 +12,9 @@ const { isDevelop } = require('../utils');
 
 const webpackBaseConfig = isDevelop ? require('../client/webpack.dev.conf') : require('../client/webpack.prod.conf')
 
-// 删除 WebpackBar 和 HtmlWebpackPlugin
+// 删除 WebpackBar
 webpackBaseConfig.plugins = webpackBaseConfig.plugins.filter((plugin) => {
-  return !(plugin instanceof WebpackBar)  && !(plugin instanceof HtmlWebpackPlugin)
+  return !(plugin instanceof WebpackBar)
 });
 
 
