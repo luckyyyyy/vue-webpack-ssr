@@ -11,7 +11,8 @@
     "build:ssr": "node build/server/build",
     "start": "node server",
     "lint": "eslint --ext .js,.vue,.jsx --cache --cache-location node_modules/.cache/.eslintcache src",
-    "lint:style": "stylelint src/**/*.{less,vue} --fix"
+    "lint:style": "stylelint src/**/*.{less,vue} --fix",
+    "check": "node build/check-version"
   },
   "engines": {
     "node": ">=8.0",
