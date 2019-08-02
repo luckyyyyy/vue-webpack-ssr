@@ -6,8 +6,9 @@
  */
 import { VNode } from 'vue';
 import { Component, Vue } from 'vue-property-decorator';
-import Hello from '@/components/Hello';
 import { namespace } from 'vuex-class';
+import Hello from '@/components/Hello';
+import { BrowserHead } from '@/mixins/head';
 
 const commonModule = namespace('common');
 
@@ -35,6 +36,12 @@ export default class Index extends Vue {
   //     setTimeout(resolve, 100);
   //   });
   // }
+
+  public browserHead(): BrowserHead {
+    return {
+      title: this.msg,
+    };
+  }
 
   public render(): VNode {
     return (

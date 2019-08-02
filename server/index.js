@@ -45,26 +45,26 @@ app.use('/robots.txt', serve('/public/robots.txt', true));
 app.disable('x-powered-by');
 app.set('trust proxy', true);
 
-app.get('*', (req, res) => {
+app.get('*', async (req, res) => {
   res.setHeader('Content-Type', 'text/html');
   const context = getContext(req);
-  renderer.renderToString(context, (err, html) => {
-    if (err) {
-      if (err.url) {
-        res.redirect(err.url);
-      } else if (err.code === 404) {
-        res.status(404).send('404 | Page Not Found');
-      } else {
-        // Render Error Page or Redirect
-        res.status(500).send('500 | Internal Server Error');
-        console.error(`error during render : ${req.url}`);
-        console.error(err.stack);
-      }
+  try {
+    const html = await renderer.renderToString(context);
+    if (context.httpStatus) res.status(context.httpStatus);
+    res.send(html);
+  } catch (err) {
+    if (err.url) {
+      res.redirect(err.url);
+      res.end();
+    } else if (typeof err.statusCode === 'number') {
+      res.status(err.statusCode).send(err.message);
     } else {
-      if (context.httpStatus) res.status(context.httpStatus);
-      res.send(html);
+      // Render Error Page or Redirect
+      res.status(500).send('500 | Internal Server Error');
+      console.error(`error during render : ${req.url}`);
+      console.error(err.stack);
     }
-  });
+  }
 });
 
 const port = process.env.PORT || 12800;

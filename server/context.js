@@ -7,8 +7,8 @@
 
 module.exports = req => ({
   title: '默认标题', // 这是默认标题，需要去代码中修改的。
-  // keywords: 'keywords',
-  // description: 'description',
+  keywords: 'keywords',
+  description: 'description',
   url: req.url,
   request: {
     headers: req.headers,

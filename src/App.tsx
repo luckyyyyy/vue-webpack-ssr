@@ -10,6 +10,12 @@ import style from '@/styles/app.module.scss'; // css module
 
 @Component
 export default class App extends Vue {
+  public browserHead() {
+    return {
+      title: '123',
+    };
+  }
+
   // eslint-disable-next-line class-methods-use-this
   public render(): VNode {
     return (

@@ -147,24 +147,6 @@ const scriptLoaders = () => {
         },
       ],
     },
-    // {
-    //   test: /\.(js|tsx?)$/,
-    //   loader: 'babel-loader',
-    //   include: [
-    //     utils.fullPath('config'),
-    //     utils.fullPath('src'),
-    //     utils.fullPath('test'),
-    //     utils.fullPath('node_modules/cube-ui'),
-    //   ],
-    // },
-    // {
-    //   test: /\.tsx?$/, // 保障 .vue 文件中 lang=ts
-    //   loader: 'ts-loader',
-    //   options: {
-    //     appendTsSuffixTo: [/\.vue$/],
-    //     appendTsxSuffixTo: [/\.vue$/],
-    //   },
-    // },
   ];
 };
 

@@ -8,12 +8,15 @@
 import 'reflect-metadata';
 import '@/utils/component-hooks';
 import Vue from 'vue';
+import headMixin from '@/mixins/head';
 import { sync } from 'vuex-router-sync';
 import App from '@/App';
 import { createRouter } from '@/router';
 import { createStore } from '@/store';
 import 'normalize.css';
 import '@/styles/index.scss';
+
+Vue.mixin(headMixin);
 
 export default () => {
   const store = createStore();

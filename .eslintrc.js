@@ -44,6 +44,7 @@ module.exports = {
     }],
     'implicit-arrow-linebreak': 'off',
     'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: true }],
+    'no-void': 0,
     'max-len': ['error', {
       'code': 140,
       'ignoreTrailingComments': true,
