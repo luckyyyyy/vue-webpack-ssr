@@ -7,7 +7,15 @@
 /* eslint no-param-reassign: ["error", { "props": false }] */
 
 import createApp from '@/entry/main';
-import { NotFoundHttpException, ForbiddenHttpException, ServerErrorHttpException } from '@/utils/http/error';
+import { HttpRedirectException } from '@/utils/http/redirect';
+import {
+  UnknownHttpException,
+  UnauthorizedHttpException,
+  NotFoundHttpException,
+  ForbiddenHttpException,
+  ServerErrorHttpException,
+  HttpException,
+} from '@/utils/http/error';
 
 // import { setApiParams } from '$api'; // eslint-disable-line
 // import { AUTH_URL, ROUTER_BASE } from '@/config';
@@ -22,6 +30,7 @@ const createError = (msg, obj = {}): Error => {
 // eslint-disable-next-line no-async-promise-executor
 export default context => new Promise(async (resolve, reject) => {
   const { request } = context;
+
   // context.rendered = (c) => {
   //   console.log(c);
   // };
@@ -36,7 +45,7 @@ export default context => new Promise(async (resolve, reject) => {
   }
   const { fullPath } = router.resolve(url).route;
   if (fullPath !== url) {
-    return reject(createError({ url: fullPath }));
+    return reject(new HttpRedirectException(fullPath));
   }
   // setApiParams(request);
   const { route } = router.resolve(url);
@@ -52,38 +61,29 @@ export default context => new Promise(async (resolve, reject) => {
   //   }
   // }
   router.push(url);
-  return router.onReady(() => {
+  return router.onReady(async () => {
     const matchedComponents = router.getMatchedComponents();
     if (!matchedComponents.length) {
-      return reject(createError({ code: 404 }));
+      return reject(new NotFoundHttpException());
     }
     // setApiParams(request);
     // setUtilParams(request);
-    return Promise.all(matchedComponents.map((c: any) => c.asyncData && c.asyncData({
-      store,
-      route: router.currentRoute,
-    }))).then(() => {
+    try {
+      await Promise.all(matchedComponents.map((c: any) => c.asyncData && c.asyncData({
+        store,
+        route: router.currentRoute,
+      })));
+      // TODO api 做成多例后 在这里应该 unset
       context.state = store.state;
-      resolve(app);
-    }).catch((err) => {
-      if (err.url) {
-        return reject(createError(err));
+      return resolve(app);
+    } catch (err) {
+      if (err instanceof UnauthorizedHttpException) {
+        return reject(new HttpRedirectException(
+          'TODO AUTH_URL',
+          // `${AUTH_URL}?redirect_uri=${encodeURIComponent(context.url)}`,
+        ));
       }
-      if (err.response) {
-        if (err.response.status === 401) {
-          // return reject(createError({ url: `${AUTH_URL}?redirect_uri=${encodeURIComponent(context.url)}` }));
-        }
-        if (err.response.status === 403) {
-          return reject(new ForbiddenHttpException());
-        }
-        if (err.response.status === 404) {
-          return reject(new NotFoundHttpException());
-        }
-        if (err.response.status >= 500) {
-          return reject(new NotFoundHttpException());
-        }
-      }
-      return reject(new ServerErrorHttpException());
-    });
+      return reject(err);
+    }
   });
 });

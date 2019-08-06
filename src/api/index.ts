@@ -11,6 +11,15 @@
 // 方案只是暂定
 
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError, AxiosInstance } from 'axios';
+import {
+  UnknownHttpException,
+  UnauthorizedHttpException,
+  NotFoundHttpException,
+  ForbiddenHttpException,
+  ServerErrorHttpException,
+  HttpException,
+} from '@/utils/http/error';
+
 
 /**
  * 请求参数配置
@@ -40,13 +49,17 @@ const onResponse = (res: AxiosResponse): Promise<AxiosResponse<any>> => {
  * 返回错误
  * @param config
  */
-const onResponseError = (err: AxiosError): Promise<AxiosError> => {
+const onResponseError = (err: AxiosError): Promise<HttpException> => {
   if (!err.response) {
-    console.log('网络问题');
-  } else if (err.response.status >= 500) {
-    console.log('500');
-  } else if (err.response.status === 403) {
-    console.log('403');
+    return Promise.reject(new UnknownHttpException(err));
+  } if (err.response.status >= 500) {
+    return Promise.reject(new ServerErrorHttpException(err));
+  } if (err.response.status === 401) {
+    return Promise.reject(new UnauthorizedHttpException(err));
+  } if (err.response.status === 403) {
+    return Promise.reject(new ForbiddenHttpException(err));
+  } if (err.response.status === 404) {
+    return Promise.reject(new NotFoundHttpException(err));
   }
   return Promise.reject(err);
 };

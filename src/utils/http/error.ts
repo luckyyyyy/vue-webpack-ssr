@@ -5,6 +5,10 @@
  * @copyright: Copyright (c) 2019 Hangzhou perfma Network Technology Co., Ltd.
  */
 
+interface ErrorInfo {
+  [key: string]: any;
+}
+
 /**
  * HttpException represents an exception caused by an improper request of the end-user.
  *
@@ -16,11 +20,30 @@
 export class HttpException extends Error {
   public statusCode: number = 400;
   public message: string = '400 Bad Request';
+  public data: any;
 
-  public constructor(statusCode, message) {
+  public constructor(statusCode, message: string | Error | ErrorInfo | null) {
     super();
     this.statusCode = statusCode;
-    this.message = message || this.message;
+    if (typeof message === 'string') {
+      this.message = message;
+    } else if (message instanceof Error) {
+      this.message = message.message;
+      this.data = Object.assign(message, {});
+    } else {
+      this.data = message;
+    }
+  }
+}
+
+/**
+ * UnknownHttpException represents a "Bad Request" HTTP exception with status code 400.
+ */
+export class UnknownHttpException extends HttpException {
+  public message: string = 'UnknownHttpException';
+
+  public constructor(message: string | Error | ErrorInfo | null = null) {
+    super(0, message);
   }
 }
 
@@ -31,19 +54,30 @@ export class HttpException extends Error {
 export class BadRequestHttpException extends HttpException {
   public message: string = '400 Bad Request';
 
-  public constructor(message = null) {
+  public constructor(message: string | Error | ErrorInfo | null = null) {
     super(400, message);
   }
 }
 
 /**
- * NotAcceptableHttpException represents a "Not Acceptable" HTTP exception with status code 406.
- * @see https://tools.ietf.org/html/rfc7231#section-6.5.6
+ * UnauthorizedHttpException represents an "Unauthorized" HTTP exception with status code 401.
+ * @see https://tools.ietf.org/html/rfc7235#section-3.1
+ */
+export class UnauthorizedHttpException extends HttpException {
+  public message: string = '401 Unauthorized';
+
+  public constructor(message: string | Error | ErrorInfo | null = null) {
+    super(401, message);
+  }
+}
+
+/**
+ * ForbiddenHttpException represents a "Forbidden" HTTP exception with status code 403.
  */
 export class ForbiddenHttpException extends HttpException {
   public message: string = '403 Forbidden';
 
-  public constructor(message = null) {
+  public constructor(message: string | Error | ErrorInfo | null = null) {
     super(403, message);
   }
 }
@@ -55,7 +89,7 @@ export class ForbiddenHttpException extends HttpException {
 export class NotFoundHttpException extends HttpException {
   public message: string = '404 Not Found';
 
-  public constructor(message = null) {
+  public constructor(message: string | Error | ErrorInfo | null = null) {
     super(404, message);
   }
 }
@@ -67,7 +101,7 @@ export class NotFoundHttpException extends HttpException {
 export class MethodNotAllowedHttpException extends HttpException {
   public message: string = '405 Method Not Allowed';
 
-  public constructor(message = null) {
+  public constructor(message: string | Error | ErrorInfo | null = null) {
     super(405, message);
   }
 }
@@ -79,7 +113,7 @@ export class MethodNotAllowedHttpException extends HttpException {
 export class NotAcceptableHttpException extends HttpException {
   public message: string = '406 Not Acceptable';
 
-  public constructor(message = null) {
+  public constructor(message: string | Error | ErrorInfo | null = null) {
     super(406, message);
   }
 }
@@ -92,7 +126,7 @@ export class NotAcceptableHttpException extends HttpException {
 export class ServerErrorHttpException extends HttpException {
   public message: string = '500 Internal Server Error';
 
-  public constructor(message = null) {
+  public constructor(message: string | Error | ErrorInfo | null = null) {
     super(500, message);
   }
 }
