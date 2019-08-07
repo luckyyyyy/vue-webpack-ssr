@@ -22,11 +22,11 @@ module.exports = {
     },
     styles: {
       test: m => m.constructor.name === 'CssModule',
-      name: 'commons',
-      minChunks: 2,
+      name: process.env.VUE_SSR ? 'all' : 'commons',
+      minChunks: process.env.VUE_SSR ? 1 : 2,
       chunks: 'all',
       reuseExistingChunk: true,
-      // enforce: true,
+      enforce: true,
     },
     vue: {
       filename: utils.assetsPath('js/vue-family-bundle.js'),

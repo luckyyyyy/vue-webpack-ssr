@@ -4,8 +4,8 @@
  * @author   : William Chan (root@williamchan.me)
  * @copyright: Copyright (c) 2019 Hangzhou perfma Network Technology Co., Ltd.
  */
+process.env.VUE_SSR = true;
 process.env.NODE_ENV = 'development';
-
 const fs = require('fs');
 const os = require('os');
 const path = require('path')
