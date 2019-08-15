@@ -7,6 +7,7 @@
 
 const webpack = require('webpack');
 const FilterWarningsPlugin = require('webpack-filter-warnings-plugin'); // 连这种东西都需要一个插件 SX
+const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const utils = require('./utils');
 const loader = require('./utils/loader');
@@ -97,5 +98,8 @@ const webpackConfig = {
     }),
   ],
 };
+if (utils.isDevelop) {
+  webpackConfig.plugins.push( new FriendlyErrorsPlugin());
+}
 
 module.exports = webpackConfig;

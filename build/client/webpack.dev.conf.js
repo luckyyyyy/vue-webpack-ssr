@@ -7,7 +7,6 @@
 const WebpackBar = require('webpackbar');
 const merge = require('webpack-merge');
 const webpack = require('webpack');
-const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const devServer = require('../config/devServer');
 const utils = require('../utils');
@@ -36,7 +35,6 @@ const webpackConfig = merge(webpackBaseConfig, {
     new MiniCssExtractPlugin({
       filename: utils.assetsPath('css/[name].css'),
     }),
-    new FriendlyErrorsPlugin(),
   ],
 });
 
