@@ -42,7 +42,7 @@ const webpackConfig = merge(webpackBaseConfig, {
         seen.add(joinedHash.substr(0, len));
         return `chunk-${joinedHash.substr(0, len)}`;
       }
-      return modules[0].id;
+      return `module-${modules[0].id}`;
     }),
     new MiniCssExtractPlugin({
       filename: utils.assetsPath('css/[name].[contenthash].css'),
