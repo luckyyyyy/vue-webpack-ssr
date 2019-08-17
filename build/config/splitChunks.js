@@ -31,7 +31,7 @@ module.exports = {
     vue: {
       filename: utils.assetsPath('js/vue-family-bundle.js'),
       name: 'vue-family-bundle',
-      test: /[\\/]node_modules[\\/](vue|vue-router|vuex|vuex-router-sync)[\\/]/,
+      test: /[\\/]node_modules[\\/](vue|vue-router|vuex|vuex-router-sync|vuex-class|vue-class-component|vue-property-decorator)[\\/]/,
       chunks: 'initial',
     },
     route: {
