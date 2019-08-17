@@ -58,7 +58,8 @@ const defaultConfig = {
   // watch all node_modules
   watchNodeModules: argv.watch,
   // 使用前先运行`npm run build:dll`
-  enableDll: true,
+  // 使用`npm run build --dll`
+  enableDll: argv.dll,
 };
 
 module.exports = Object.assign(defaultConfig, config);
