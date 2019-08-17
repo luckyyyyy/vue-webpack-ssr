@@ -57,6 +57,8 @@ const defaultConfig = {
   sourceMap: isDevelop,
   // watch all node_modules
   watchNodeModules: argv.watch,
+  // 使用前先运行`npm run build:dll`
+  enableDll: true,
 };
 
 module.exports = Object.assign(defaultConfig, config);

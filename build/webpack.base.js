@@ -101,5 +101,9 @@ const webpackConfig = {
 if (utils.isDevelop) {
   webpackConfig.plugins.push( new FriendlyErrorsPlugin());
 }
-
+// if (config.enableDll) {
+//   webpackConfig.plugins.push(new webpack.DllReferencePlugin({
+//     manifest: utils.fullPath('node_modules/.cache/dll-manifest.json'),
+//   }));
+// }
 module.exports = webpackConfig;

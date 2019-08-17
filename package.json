@@ -9,6 +9,7 @@
     "dev:ssr": "node --inspect build/server/dev-server",
     "build": "rimraf dist && cross-env NODE_ENV=production webpack --config build/client/webpack.prod.conf --hide-modules",
     "build:ssr": "node build/server/build",
+    "build:dll": "cross-env NODE_ENV=production webpack --config build/config/webpack.dll.js",
     "start": "node server",
     "lint": "eslint --ext .js,.vue,.jsx --cache --cache-location node_modules/.cache/.eslintcache src",
     "lint:style": "stylelint src/**/*.{less,vue} --fix"
