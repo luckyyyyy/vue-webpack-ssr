@@ -4,8 +4,10 @@
  * @author   : William Chan (root@williamchan.me)
  * @copyright: Copyright (c) 2019 Hangzhou perfma Network Technology Co., Ltd.
  */
+
 process.env.VUE_SSR = true;
 process.env.NODE_ENV = 'development';
+
 const fs = require('fs');
 const os = require('os');
 const path = require('path')
@@ -62,6 +64,8 @@ const ready = (...args) => {
 readyPromise.then(() => {
   portfinder.basePort = 8080;
   portfinder.getPort((err, port) => {
+    process.env.API_GATEWAY = 'http://localhost:' + port;
+
     app.listen(port, () => {
       function getLocalIps(flagIpv6) {
         const ifaces = os.networkInterfaces();
@@ -112,6 +116,7 @@ clientCompiler.hooks.done.tap('complete', stats => {
     devMiddleware.fileSystem,
     'vue-ssr-client-manifest.json'
   ))
+
   if (bundle) {
     ready(bundle, {
       clientManifest

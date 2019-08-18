@@ -8,37 +8,16 @@
 
 import createApp from '@/entry/main';
 import { HttpRedirectException } from '@/utils/http/redirect';
-import {
-  UnknownHttpException,
-  UnauthorizedHttpException,
-  NotFoundHttpException,
-  ForbiddenHttpException,
-  ServerErrorHttpException,
-  HttpException,
-} from '@/utils/http/error';
-
-// import { setApiParams } from '$api'; // eslint-disable-line
-// import { AUTH_URL, ROUTER_BASE } from '@/config';
-// import { setUtilParams } from '@/utils';
-
-const createError = (msg, obj = {}): Error => {
-  const err = new Error(msg);
-  Object.assign(err, obj);
-  return err;
-};
+import { UnauthorizedHttpException, NotFoundHttpException } from '@/utils/http/error';
+import { AUTH_STATE, AUTH_URL } from '@/config/auth';
+import { resolveRedirectUri, getRedirectUri } from '@/utils';
 
 // eslint-disable-next-line no-async-promise-executor
 export default context => new Promise(async (resolve, reject) => {
   const { request } = context;
+  const { app, router, store, http } = createApp(request);
+  store.commit('HTTP_INSTANCE', http);
 
-  // context.rendered = (c) => {
-  //   console.log(c);
-  // };
-  // context.rendered(() => {
-  //   console.log(123);
-  // });
-  // setUtilParams(request);
-  const { app, router, store } = createApp();
   let { url } = context;
   if (url.indexOf('') === 0) {
     url = url.substr(0);
@@ -47,41 +26,41 @@ export default context => new Promise(async (resolve, reject) => {
   if (fullPath !== url) {
     return reject(new HttpRedirectException(fullPath));
   }
-  // setApiParams(request);
   const { route } = router.resolve(url);
-  const requiresAuth = route.matched.some(record => record.meta.requiresAuth);
-  const ignoreAuth = route.matched.some(record => record.meta.ignoreAuth);
-  // if (!ignoreAuth) {
-  //   try {
-  //     await store.dispatch('user/GET_USER');
-  //   } catch (err) {
-  //     if (requiresAuth) {
-  //       return reject(createError({ url: `${AUTH_URL}?redirect_uri=${encodeURIComponent(context.url)}` }));
-  //     }
+  const requiresAuth = route.matched.some(record => record.meta.auth === AUTH_STATE.LOGGED_IN);
+  const requiresGuest = route.matched.some(record => record.meta.auth === AUTH_STATE.GUEST);
+
+  // 首次检查用户
+  // try {
+  //   await store.dispatch('user/USER_GET');
+  //   if (requiresGuest) {
+  //     return reject(new HttpRedirectException(resolveRedirectUri(route.query.redirect_uri)));
+  //   }
+  // } catch (err) {
+  //   if (requiresAuth) {
+  //     return reject(new HttpRedirectException(getRedirectUri(context.url)));
   //   }
   // }
+
   router.push(url);
   return router.onReady(async () => {
     const matchedComponents = router.getMatchedComponents();
     if (!matchedComponents.length) {
       return reject(new NotFoundHttpException());
     }
-    // setApiParams(request);
-    // setUtilParams(request);
     try {
       await Promise.all(matchedComponents.map((c: any) => c.asyncData && c.asyncData({
+        http,
         store,
         route: router.currentRoute,
       })));
       // TODO api 做成多例后 在这里应该 unset
+      // 好像不需要 会自动过滤掉 function
       context.state = store.state;
       return resolve(app);
     } catch (err) {
       if (err instanceof UnauthorizedHttpException) {
-        return reject(new HttpRedirectException(
-          'TODO AUTH_URL',
-          // `${AUTH_URL}?redirect_uri=${encodeURIComponent(context.url)}`,
-        ));
+        return reject(new HttpRedirectException(getRedirectUri(context.url)));
       }
       return reject(err);
     }

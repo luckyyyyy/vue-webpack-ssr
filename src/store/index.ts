@@ -6,20 +6,34 @@
  */
 
 import Vue from 'vue';
-import Vuex, { Store } from 'vuex';
+import Vuex from 'vuex';
+import { AxiosInstance } from 'axios';
 import { isDevelop } from '@/utils';
-import commonModule, { CommonState } from './modules/common';
+// import UserModule, { UserState } from './modules/user/index2';
+import { CommonModule, CommonState } from './modules/common';
 
 Vue.use(Vuex);
 
 export interface MStore {
-  common: CommonState;
+  http: AxiosInstance;
+  user: CommonState;
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export const createStore = (): Store<MStore> => new Vuex.Store({
+export const createStore = () => new Vuex.Store<MStore>({
   strict: isDevelop,
+  // 这里不知道怎么解决 modules 和 root state 共存
+  // @ts-ignore
+  state: {
+    http: null,
+  },
+  mutations: {
+    /* eslint-disable no-param-reassign */
+    HTTP_INSTANCE(state, instance: AxiosInstance) {
+      state.http = instance;
+    },
+  },
   modules: {
-    common: commonModule,
+    common: CommonModule,
   },
 });

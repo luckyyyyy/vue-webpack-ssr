@@ -39,7 +39,6 @@ const serverHeadMixin = Vue.extend({
 const clientHeadMixin = Vue.extend({
   created() {
     const browserHead = getBrowserHead(this);
-
     if (browserHead) {
       if (browserHead.title) document.title = browserHead.title;
       if (browserHead.keywords) {

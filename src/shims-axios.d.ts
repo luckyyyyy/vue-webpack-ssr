@@ -6,14 +6,7 @@
  */
 
 import axios from 'axios';
-
-interface APIRespons<T = any> {
-  data: T;
-  success: boolean;
-  message: string;
-  code: string;
-  extend: object;
-}
+import { APIRespons } from '@/api';
 
 declare module 'axios' {
   export interface AxiosResponse<T = any> extends Promise<APIRespons<T>> {

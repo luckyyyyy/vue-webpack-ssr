@@ -9,7 +9,8 @@
 import Vue from 'vue';
 // import Fastclick from 'fastclick/lib/fastclick';
 import createApp from '@/entry/main';
-// import { AUTH_URL } from '@/config';
+import { AUTH_STATE } from '@/config/auth';
+import { getRedirectUri } from '@/utils';
 // import { isMobileDevice } from '@/utils';
 // import { DIST_PATH } from '$env';
 
@@ -18,25 +19,24 @@ import createApp from '@/entry/main';
 // }
 
 
-const { app, router, store } = createApp();
+const { app, router, store, http } = createApp();
 
 if (window.__INITIAL_STATE__) {
   store.replaceState(window.__INITIAL_STATE__);
 }
+store.commit('HTTP_INSTANCE', http);
 
 router.onReady(() => {
-  router.beforeResolve(async (to, from, next) => {
-    const requiresAuth = to.matched.some(record => record.meta.requiresAuth);
-    const ignoreAuth = to.matched.some(record => record.meta.ignoreAuth);
-    // if (requiresAuth && Object.keys(store.state.user.user).length === 0) {
-    // if (!ignoreAuth) {
-    //   try {
-    //     await store.dispatch('user/GET_USER');
-    //   } catch (err) {
-    //     // window.location.href = AUTH_URL;
-    //   }
-    // }
-    // }
+  router.beforeResolve((to, from, next) => {
+    const requiresAuth = to.matched.some(record => record.meta.auth === AUTH_STATE.LOGGED_IN);
+    const requiresGuest = to.matched.some(record => record.meta.auth === AUTH_STATE.GUEST);
+    if (requiresAuth && !store.getters['user/isLogin']) {
+      return next(getRedirectUri(to.fullPath));
+    }
+    if (requiresGuest && store.getters['user/isLogin']) {
+      return next(false);
+    }
+
     const matched = router.getMatchedComponents(to);
     const prevMatched = router.getMatchedComponents(from);
     let diffed = false;
@@ -50,8 +50,8 @@ router.onReady(() => {
       }
       return diffed;
     });
-    // tsignore
-    const asyncDataHooks = activated.map(c => (c as any).asyncData).filter(_ => _);
+
+    const asyncDataHooks = activated.map((c: any) => c.asyncData).filter(_ => _);
     if (!asyncDataHooks.length) {
       return next();
     }
@@ -74,6 +74,7 @@ router.onReady(() => {
       }
     });
   });
+
   // 先挂上 第二次才轮到客户端
   app.$mount('#app');
   Vue.mixin(Vue.extend({
