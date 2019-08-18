@@ -1,12 +1,12 @@
 {
-  "name": "perfma-vue",
+  "name": "vue-webpack-ssr",
   "version": "1.0.0",
-  "description": "perfma-vue",
-  "author": "William Chan <root@williamchan.me>, Emile Zhai <root@derzh.com>",
+  "description": "This repo is a boilerplate for vue-webpack-ssr project. You could use it as a base to build your own web app.",
+  "author": "William Chan <root@williamchan.me>",
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --inline --config build/client/webpack.dev.conf.js",
-    "dev:ssr": "node build/server/dev-server",
+    "dev:ssr": "node --inspect build/server/dev-server",
     "build": "rimraf dist && cross-env NODE_ENV=production webpack --config build/client/webpack.prod.conf --hide-modules",
     "build:ssr": "node build/server/build",
     "start": "node server",
