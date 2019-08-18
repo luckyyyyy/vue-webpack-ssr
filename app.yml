@@ -1,0 +1,13 @@
+apps:
+  - script : server/index.js
+    # args: 'one two'
+    name : 'ssr'
+    watch : false
+    instances: 0
+    autorestart: true
+    max_memory_restart: '1G'
+    env_test :
+      API_GATEWAY: 'http://localhost:10020'
+      NODE_ENV: 'production'
+      PORT: 10020
+      HOST: '0.0.0.0'
