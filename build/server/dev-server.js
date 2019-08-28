@@ -105,6 +105,7 @@ const devMiddleware = require('webpack-dev-middleware')(clientCompiler, {
   publicPath: clientConfig.output.publicPath,
   stats: false,
   logLevel: 'silent',
+  index: null,
   serverSideRender: true,
 })
 app.use(devMiddleware)

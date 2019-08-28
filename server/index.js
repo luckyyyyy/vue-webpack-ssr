@@ -16,8 +16,10 @@ const compression = require('compression');
 const bundle = require('../dist/vue-ssr-server-bundle.json');
 const clientManifest = require('../dist/vue-ssr-client-manifest.json');
 const getContext = require('./context');
+const config = require('../build/config');
 
 const fullPath = s => path.join(__dirname, '..', s);
+let downgradedHtml;
 
 const renderer = createBundleRenderer(bundle, {
   template: fs.readFileSync(fullPath('/template/ssr.html'), 'utf-8'),
@@ -60,9 +62,16 @@ app.get('*', async (req, res) => {
       res.status(err.statusCode).send(err.message);
     } else {
       // Render Error Page or Redirect
-      res.status(500).send('500 | Internal Server Error');
-      console.error(`error during render : ${req.url}`);
-      console.error(err.stack || err);
+      try {
+        console.error(`error during server render : ${req.url}\n  trying to downgrade to client html`);
+        console.error(err.stack || err);
+        if (!downgradedHtml) downgradedHtml = fs.readFileSync(fullPath(`/dist/${config.clientIndex}`), 'utf-8');
+        res.status(200).send(downgradedHtml);
+      } catch (e) {
+        console.error('error during downgrading to client html');
+        console.error(e);
+        res.status(500).send('500 | Internal Server Error');
+      }
     }
   }
 });
