@@ -10,7 +10,7 @@ const VueSSRClientPlugin = require('vue-server-renderer/client-plugin');
 const merge = require('webpack-merge');
 const { isDevelop } = require('../utils');
 
-const webpackBaseConfig = isDevelop ? require('../client//webpack.dev.conf') : require('../client//webpack.prod.conf')
+const webpackBaseConfig = isDevelop ? require('../client/webpack.dev.conf') : require('../client/webpack.prod.conf')
 
 // 删除 WebpackBar 和 HtmlWebpackPlugin
 webpackBaseConfig.plugins = webpackBaseConfig.plugins.filter((plugin) => {

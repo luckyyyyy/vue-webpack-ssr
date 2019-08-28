@@ -11,6 +11,7 @@ const nodeExternals = require('webpack-node-externals')
 const webpackBaseConfig = require('../webpack.base');
 const merge = require('webpack-merge');
 const loader = require('../utils/loader');
+const utils = require('../utils');
 
 module.exports = merge(webpackBaseConfig, {
   entry: config.serverEntry,
@@ -23,7 +24,6 @@ module.exports = merge(webpackBaseConfig, {
   }),
   output: {
     publicPath: config.assetsPublicPath,
-    filename: 'server-bundle.js',
     libraryTarget: 'commonjs2'
   },
   module: {

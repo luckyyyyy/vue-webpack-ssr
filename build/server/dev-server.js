@@ -26,6 +26,8 @@ const utils = require('../utils');
 const getContext = require('../../server/context');
 clientConfig.mode = process.env.NODE_ENV;
 serverConfig.mode = process.env.NODE_ENV;
+clientConfig.output.publicPath = '/';
+serverConfig.output.publicPath = '/';
 
 const serverInfo =
   `express/${require('express/package.json').version} ` +

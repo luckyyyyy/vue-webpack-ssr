@@ -14,14 +14,7 @@ module.exports = {
   serverEntry: fullPath('src/entry/server.ts'), // 一般不需要指定 除非SSR
   proxy: {
     '/api': {
-      target: 'http://xland-u.dev.perfma-inc.net',
-      changeOrigin: true,
-      secure: false,
-    },
-    '/login': {
-      target: 'http://login-u.dev.perfma-inc.net',
-      changeOrigin: true,
-      secure: false,
+      target: 'http://api.com',
     },
   },
   // autoOpenBrowser: false,
