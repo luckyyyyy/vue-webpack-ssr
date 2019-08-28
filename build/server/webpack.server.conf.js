@@ -22,6 +22,7 @@ module.exports = merge(webpackBaseConfig, {
     whitelist: ['regenerator-runtime/runtime', /\.css$/]
   }),
   output: {
+    publicPath: config.assetsPublicPath,
     filename: 'server-bundle.js',
     libraryTarget: 'commonjs2'
   },
