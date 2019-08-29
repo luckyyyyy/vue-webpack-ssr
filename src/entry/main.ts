@@ -16,6 +16,7 @@ import { createStore } from '@/store';
 import { createAxios } from '@/api';
 import 'normalize.css';
 import '@/styles/index.scss';
+import '@/styles/test.less';
 
 Vue.mixin(headMixin);
 

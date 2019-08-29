@@ -7,10 +7,12 @@
 import { VNode } from 'vue';
 import { Component, Vue } from 'vue-property-decorator';
 import style from '@/styles/app.module.scss'; // css module
+import { BrowserHead } from '@/mixins/head';
 
 @Component
 export default class App extends Vue {
-  public browserHead() {
+  // eslint-disable-next-line class-methods-use-this
+  public browserHead(): BrowserHead {
     return {
       title: '123',
     };

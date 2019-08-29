@@ -43,7 +43,7 @@ const styleLoaders = (options = {}) => {
   } : 'vue-style-loader';
 
   // css module
-  const cssModulesRules = ['css', 'scss', 'styl', 'stylus'].map((extension) => {
+  const cssModulesRules = ['css', 'scss', 'less', 'styl', 'stylus'].map((extension) => {
     let rule = {
       test: new RegExp(`\\.module.${extension}$`),
       use: [
@@ -62,7 +62,7 @@ const styleLoaders = (options = {}) => {
   });
 
   // 非 module
-  const cssRules = ['css', 'scss', 'styl', 'stylus'].map((extension) => {
+  const cssRules = ['css', 'scss', 'less', 'styl', 'stylus'].map((extension) => {
     let rule = {
       test: new RegExp(`\\.${extension}$`),
       exclude: new RegExp(`\\.module.${extension}$`),
