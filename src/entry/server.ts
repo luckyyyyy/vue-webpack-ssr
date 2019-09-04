@@ -16,7 +16,7 @@ import { resolveRedirectUri, getRedirectUri } from '@/utils';
 export default context => new Promise(async (resolve, reject) => {
   const { request } = context;
   const { app, router, store, http } = createApp(request);
-  store.commit('HTTP_INSTANCE', http);
+  store.commit('setHttpInstance', http);
 
   let { url } = context;
   if (url.indexOf('') === 0) {

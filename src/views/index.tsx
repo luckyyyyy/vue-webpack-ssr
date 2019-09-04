@@ -49,8 +49,17 @@ export default class Index extends Vue {
         <h1>{ this.text }</h1>
         <Hello msg={this.msg} bug />
         <button onClick={this.onClick}>switch text</button>
-        <center><router-link to={{ path: '/404' }}>go to 404</router-link></center>
         <div class="less"> less style test </div>
+        <p>*** 下面是一些路由过度的测试 可以自定义 asyncData 加载时的组件 ***</p>
+        <p>
+          <router-link to={{ name: 'loading-test' }}>loading-test</router-link>
+        </p>
+        <p>
+          <router-link to={{ name: 'loading-test-2' }}>loading-test-2(LoadingComponent)</router-link>
+        </p>
+        <p>
+          <router-link to={{ path: '/404' }}>go to 404</router-link>
+        </p>
       </div>
     );
   }

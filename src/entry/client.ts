@@ -7,24 +7,19 @@
 /* eslint no-underscore-dangle: "off" */
 
 import Vue from 'vue';
-// import Fastclick from 'fastclick/lib/fastclick';
 import createApp from '@/entry/main';
 import { AUTH_STATE } from '@/config/auth';
 import { getRedirectUri } from '@/utils';
-// import { isMobileDevice } from '@/utils';
-// import { DIST_PATH } from '$env';
-
-// if (isMobileDevice()) {
-//   Fastclick.attach(document.body);
-// }
+import { createAsyncTransition } from '@/components/async-transition';
 
 
 const { app, router, store, http } = createApp();
+const AsyncTransition = createAsyncTransition(store);
 
 if (window.__INITIAL_STATE__) {
   store.replaceState(window.__INITIAL_STATE__);
 }
-store.commit('HTTP_INSTANCE', http);
+store.commit('setHttpInstance', http);
 
 router.onReady(() => {
   router.beforeResolve((to, from, next) => {
@@ -50,17 +45,19 @@ router.onReady(() => {
       }
       return diffed;
     });
-
+    AsyncTransition.clear();
     const asyncDataHooks = activated.map((c: any) => c.asyncData).filter(_ => _);
     if (!asyncDataHooks.length) {
       return next();
     }
-    // bar.start();
+    const LoadingComponent = to.matched.reduceRight((prev, current) => current.meta.LoadingComponent, undefined);
+    AsyncTransition.start(LoadingComponent);
     return Promise.all(asyncDataHooks.map(hook => hook({ store, route: to }))).then(() => {
-      // bar.finish();
+      AsyncTransition.finish();
       next();
     }).catch((err) => {
-      // bar.fail();
+      const ErrorComponent = to.matched.reduceRight((prev, current) => current.meta.ErrorComponent, undefined);
+      AsyncTransition.fail(ErrorComponent);
       if (err.url) {
         next({ name: err.url });
       } else if (err.response.status === 404) {

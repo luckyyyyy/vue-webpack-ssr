@@ -5,7 +5,7 @@
  * @copyright: Copyright (c) 2019 Hangzhou perfma Network Technology Co., Ltd.
  */
 
-import Vue from 'vue';
+import Vue, { Component } from 'vue';
 import Vuex from 'vuex';
 import { AxiosInstance } from 'axios';
 import { isDevelop } from '@/utils';
@@ -16,6 +16,7 @@ Vue.use(Vuex);
 
 export interface MStore {
   http: AxiosInstance;
+  'async-transition': Component;
   user: CommonState;
 }
 
@@ -26,11 +27,16 @@ export const createStore = () => new Vuex.Store<MStore>({
   // @ts-ignore
   state: {
     http: null,
+    'async-transition': {},
   },
   mutations: {
     /* eslint-disable no-param-reassign */
-    HTTP_INSTANCE(state, instance: AxiosInstance) {
+    setHttpInstance(state, instance: AxiosInstance) {
       state.http = instance;
+    },
+    setAsyncTransition(state, data) {
+      // eslint-disable-next-line no-param-reassign
+      state['async-transition'] = data;
     },
   },
   modules: {
