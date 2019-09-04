@@ -20,19 +20,14 @@ interface ErrorInfo {
 export class HttpException extends Error {
   public statusCode: number = 400;
   public message: string = '400 Bad Request';
-  public data: any;
+  public extra?: any;
+  public info?: ErrorInfo;
 
-  public constructor(statusCode, message: string | Error | ErrorInfo | null) {
+  public constructor(statusCode, info?: ErrorInfo, extra?: any) {
     super();
+    this.info = info;
     this.statusCode = statusCode;
-    if (typeof message === 'string') {
-      this.message = message;
-    } else if (message instanceof Error) {
-      this.message = message.message;
-      this.data = Object.assign(message, {});
-    } else {
-      this.data = message;
-    }
+    this.extra = extra;
   }
 }
 
@@ -42,8 +37,8 @@ export class HttpException extends Error {
 export class UnknownHttpException extends HttpException {
   public message: string = 'UnknownHttpException';
 
-  public constructor(message: string | Error | ErrorInfo | null = null) {
-    super(0, message);
+  public constructor(info?: ErrorInfo, extra?: any) {
+    super(0, info, extra);
   }
 }
 
@@ -54,8 +49,8 @@ export class UnknownHttpException extends HttpException {
 export class BadRequestHttpException extends HttpException {
   public message: string = '400 Bad Request';
 
-  public constructor(message: string | Error | ErrorInfo | null = null) {
-    super(400, message);
+  public constructor(info?: ErrorInfo, extra?: any) {
+    super(400, info, extra);
   }
 }
 
@@ -66,19 +61,20 @@ export class BadRequestHttpException extends HttpException {
 export class UnauthorizedHttpException extends HttpException {
   public message: string = '401 Unauthorized';
 
-  public constructor(message: string | Error | ErrorInfo | null = null) {
-    super(401, message);
+  public constructor(info?: ErrorInfo, extra?: any) {
+    super(401, info, extra);
   }
 }
 
 /**
- * ForbiddenHttpException represents a "Forbidden" HTTP exception with status code 403.
+ * NotAcceptableHttpException represents a "Not Acceptable" HTTP exception with status code 406.
+ * @see https://tools.ietf.org/html/rfc7231#section-6.5.6
  */
 export class ForbiddenHttpException extends HttpException {
   public message: string = '403 Forbidden';
 
-  public constructor(message: string | Error | ErrorInfo | null = null) {
-    super(403, message);
+  public constructor(info?: ErrorInfo, extra?: any) {
+    super(403, info, extra);
   }
 }
 
@@ -89,8 +85,8 @@ export class ForbiddenHttpException extends HttpException {
 export class NotFoundHttpException extends HttpException {
   public message: string = '404 Not Found';
 
-  public constructor(message: string | Error | ErrorInfo | null = null) {
-    super(404, message);
+  public constructor(info?: ErrorInfo, extra?: any) {
+    super(404, info, extra);
   }
 }
 
@@ -101,8 +97,8 @@ export class NotFoundHttpException extends HttpException {
 export class MethodNotAllowedHttpException extends HttpException {
   public message: string = '405 Method Not Allowed';
 
-  public constructor(message: string | Error | ErrorInfo | null = null) {
-    super(405, message);
+  public constructor(info?: ErrorInfo, extra?: any) {
+    super(405, info, extra);
   }
 }
 
@@ -113,8 +109,8 @@ export class MethodNotAllowedHttpException extends HttpException {
 export class NotAcceptableHttpException extends HttpException {
   public message: string = '406 Not Acceptable';
 
-  public constructor(message: string | Error | ErrorInfo | null = null) {
-    super(406, message);
+  public constructor(info?: ErrorInfo, extra?: any) {
+    super(406, info, extra);
   }
 }
 
@@ -126,7 +122,7 @@ export class NotAcceptableHttpException extends HttpException {
 export class ServerErrorHttpException extends HttpException {
   public message: string = '500 Internal Server Error';
 
-  public constructor(message: string | Error | ErrorInfo | null = null) {
-    super(500, message);
+  public constructor(info?: ErrorInfo, extra?: any) {
+    super(500, info, extra);
   }
 }
