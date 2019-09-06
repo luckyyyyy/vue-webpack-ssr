@@ -174,13 +174,32 @@ app.get('*', (req, res) => {
       if (err.url) {
         res.redirect(err.url);
         res.end();
-      } else if (typeof err.statusCode === 'number') {
-        res.status(err.statusCode).send(err.message);
       } else {
-        // Render Error Page or Redirect
-        res.status(500).send('500 | Internal Server Error');
-        console.error(`error during render : ${req.url}`);
+        if (typeof err.statusCode === 'number') {
+          res.status(err.statusCode).send(err.message);
+        } else {
+          res.status(500).send('500 | Internal Server Error');
+        }
+        console.error(new Date());
+        const headers = Object.keys(req.headers).map(key => {
+          return `${key}: ${req.headers[key]}`;
+        });
+        console.error(`Error during render: ${req.url}`);
+        console.error(headers.join("\n"));
         console.error(err.stack);
+        // only dev
+        if (err.extra && err.extra.config && err.extra.config.headers) {
+          console.debug("\nError extra:");
+          console.debug(`${err.extra.config.method.toLocaleUpperCase()}: ${err.extra.config.url}`);
+          if (err.extra.config.data) {
+            console.debug(err.extra.config.data);
+          }
+          if (err.extra.response) {
+            console.debug(err.extra.response.data);
+          } else if (err.extra.data) {
+            console.debug(err.extra.data);
+          }
+        }
       }
     }
   }).catch((err) => {
