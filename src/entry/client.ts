@@ -87,10 +87,9 @@ router.onReady(() => {
       }
     },
     beforeMount() {
-      if (this.$options.serverPrefetch) {
-        this.$options.serverPrefetch.forEach((serverPrefetch) => {
-          serverPrefetch.call(this);
-        });
+      const { serverPrefetch } = this.$options;
+      if (serverPrefetch) {
+        serverPrefetch.call(this);
       }
       //   const { asyncData } = this.$options;
       //   if (asyncData) {
