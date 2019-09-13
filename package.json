@@ -12,6 +12,8 @@
     "start": "node server",
     "lint": "eslint --ext .js,.vue,.jsx --cache --cache-location node_modules/.cache/.eslintcache src",
     "lint:style": "stylelint src/**/*.{less,vue} --fix",
+    "prebuild": "npm run check",
+    "prebuild:ssr": "npm run check",
     "check": "node build/check-version"
   },
   "engines": {
