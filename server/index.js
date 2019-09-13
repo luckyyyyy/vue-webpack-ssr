@@ -12,7 +12,7 @@ const LRU = require('lru-cache');
 const express = require('express');
 // const favicon = require('serve-favicon');
 const { createBundleRenderer } = require('vue-server-renderer');
-const compression = require('compression');
+// const compression = require('compression');
 const bundle = require('../dist/vue-ssr-server-bundle.json');
 const clientManifest = require('../dist/vue-ssr-client-manifest.json');
 const getContext = require('./context');
@@ -21,7 +21,7 @@ const fullPath = s => path.join(__dirname, '..', s);
 
 const renderer = createBundleRenderer(bundle, {
   template: fs.readFileSync(fullPath('/template/ssr.html'), 'utf-8'),
-  cache: LRU({
+  cache: new LRU({
     max: 1000,
     maxAge: 1000 * 60 * 15,
   }),
@@ -35,7 +35,7 @@ const serve = (path, cache) => express.static(fullPath(path), {
 });
 
 const app = express();
-app.use(compression({ threshold: 0 }));
+// app.use(compression({ threshold: 0 }));
 // app.use(favicon('./public/favicon.ico'));
 // app.use('/dist/service-worker.js', serve('./dist/service-worker.js'));
 app.use('/static', serve('/dist/static', true));
