@@ -162,46 +162,66 @@ serverCompiler.watch({}, (err, stats) => {
 app.get('*', (req, res) => {
   readyPromise.then(async () => {
     const s = Date.now();
-    res.setHeader('Content-Type', 'text/html');
+    res.setHeader('Content-Type', 'text/html; charset=utf-8');
     res.setHeader('Server', serverInfo);
     const context = getContext(req);
-    try {
-      const html = await renderer.renderToString(context);
+    const renderStream = renderer.renderToStream(context)
+    renderStream.once('data', () => {
       if (context.httpStatus) res.status(context.httpStatus);
-      res.send(html);
-      console.log(`whole request: ${Date.now() - s}ms \t${req.url}`);
-    } catch (err) {
+    })
+    renderStream.on('data', (chunk) => {
+      res.write(chunk);
+    })
+    renderStream.on('end', () => {
+      console.debug(`whole request: ${Date.now() - s}ms \t${req.url}`);
+      res.send();
+    })
+    renderStream.on('error', (err) => {
       if (err.url) {
         res.redirect(err.url);
-        res.end();
+        res.send();
       } else {
-        if (typeof err.statusCode === 'number') {
-          res.status(err.statusCode).send(err.message);
-        } else {
-          res.status(500).send('500 | Internal Server Error');
-        }
         console.error(new Date());
+        let log = [];
         const headers = Object.keys(req.headers).map(key => {
           return `${key}: ${req.headers[key]}`;
         });
-        console.error(`Error during render: ${req.url}`);
-        console.error(headers.join("\n"));
-        console.error(err.stack);
+        log.push(`Error during render: ${req.url}`)
+        log.push(headers.join("\n"));
+        log.push(err.stack);
         // only dev
         if (err.extra && err.extra.config && err.extra.config.headers) {
-          console.debug("\nError extra:");
-          console.debug(`${err.extra.config.method.toLocaleUpperCase()}: ${err.extra.config.url}`);
+          log.push("\nError extra:");
+          log.push(`${err.extra.config.method.toLocaleUpperCase()}: ${err.extra.config.url}`);
           if (err.extra.config.data) {
-            console.debug(err.extra.config.data);
+            log.push(err.extra.config.data);
           }
           if (err.extra.response) {
-            console.debug(err.extra.response.data);
+            log.push(err.extra.response.data);
           } else if (err.extra.data) {
-            console.debug(err.extra.data);
+            log.push(err.extra.data);
           }
         }
+        if (typeof err.statusCode === 'number') {
+          res.status(err.statusCode).send(
+            `<h1>${err.message}</h1>
+            <p>Server: ${serverInfo}</p>
+            <hr>
+            <pre>${log.map((e) => {
+              if (typeof e === 'string') {
+                return `<div>${e}</div>`
+              } else {
+                return `<div>${JSON.stringify(e)}</div>`;
+              }
+            }).join('')}</pre>`
+          );
+        } else {
+          res.status(500).send(`<h1>Internal Server Error</h1><pre>${log.join('\n')}</pre>`);
+        }
+        log.forEach((e) => console.error(e))
+        console.error('\n')
       }
-    }
+    });
   }).catch((err) => {
     res.end();
   });

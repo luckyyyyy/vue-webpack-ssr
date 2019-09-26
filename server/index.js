@@ -46,43 +46,72 @@ app.disable('x-powered-by');
 app.set('trust proxy', true);
 
 app.get('*', async (req, res) => {
-  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Content-Type', 'text/html; charset=utf-8');
   const context = getContext(req);
-  try {
-    const html = await renderer.renderToString(context);
+  const renderStream = renderer.renderToStream(context)
+  renderStream.once('data', () => {
     if (context.httpStatus) res.status(context.httpStatus);
-    res.send(html);
-  } catch (err) {
+  })
+  renderStream.on('data', (chunk) => {
+    res.write(chunk);
+  })
+  renderStream.on('end', () => {
+    res.send();
+  })
+  renderStream.on('error', (err) => {
     if (err.url) {
       res.redirect(err.url);
-      res.end();
+      res.send();
     } else {
-      if (typeof err.statusCode === 'number') {
-        res.status(err.statusCode).send(err.message);
-      } else {
-        res.status(500).send('500 | Internal Server Error');
-      }
       console.error(new Date());
+      let log = [];
       const headers = Object.keys(req.headers).map(key => {
         return `${key}: ${req.headers[key]}`;
       });
-      console.error(`Error during render: ${req.url}`);
-      console.error(headers.join("\n"));
-      console.error(err.stack);
-      if (err.statusCode === 500 && err.extra && err.extra.config && err.extra.config.headers) {
-        console.error("\nError extra:");
-        console.error(`${err.extra.config.method.toLocaleUpperCase()}: ${err.extra.config.url}`);
+      log.push(`Error during render: ${req.url}`)
+      log.push(headers.join("\n"));
+      log.push(err.stack);
+      if (process.env.PERFMA_ENV || (err.statusCode === 500 && err.extra && err.extra.config && err.extra.config.headers)) {
+        log.push("\nError extra:");
+        log.push(`${err.extra.config.method.toLocaleUpperCase()}: ${err.extra.config.url}`);
         if (err.extra.config.data) {
-          console.error(err.extra.config.data);
+          log.push(err.extra.config.data);
         }
         if (err.extra.response) {
-          console.error(err.extra.response.data);
+          log.push(err.extra.response.data);
         } else if (err.extra.data) {
-          console.error(err.extra.data);
+          log.push(err.extra.data);
         }
       }
+      if (typeof err.statusCode === 'number') {
+        res.status(err.statusCode)
+        res.write(
+          `<h1>${err.message}</h1>
+          <hr>`
+        );
+        if (process.env.PERFMA_ENV) {
+          res.write(`
+          <pre>${log.map((e) => {
+            if (typeof e === 'string') {
+              return `<div>${e}</div>`
+            } else {
+              return `<div>${JSON.stringify(e)}</div>`;
+            }
+          }).join('')}</pre>`);
+        }
+        res.send();
+      } else {
+        if (process.env.PERFMA_ENV) {
+          res.status(500).send(`<h1>Internal Server Error</h1><pre>${log.join('\n')}</pre>`);
+        } else {
+          res.status(500).send('<h1>Internal Server Error</h1>');
+        }
+      }
+      log.forEach((e) => console.error(e))
+      console.error('\n')
     }
-  }
+  });
+
 });
 
 const port = process.env.PORT || 12800;
