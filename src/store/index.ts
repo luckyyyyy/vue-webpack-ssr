@@ -11,11 +11,14 @@ import { AxiosInstance } from 'axios';
 import { isDevelop } from '@/utils';
 // import UserModule, { UserState } from './modules/user/index2';
 import { CommonModule, CommonState } from './modules/common';
+import { EntryParams } from '@/entry/main';
 
 Vue.use(Vuex);
 
 export interface MStore {
   http: AxiosInstance;
+  isInWechat: boolean;
+  isMobileDevice: boolean;
   'async-transition': Component;
   user: CommonState;
 }
@@ -28,11 +31,17 @@ export const createStore = () => new Vuex.Store<MStore>({
   state: {
     http: null,
     'async-transition': {},
+    isInWechat: false,
+    isMobileDevice: false,
   },
   mutations: {
     /* eslint-disable no-param-reassign */
-    setHttpInstance(state, instance: AxiosInstance) {
+    HTTP_INSTANCE(state, instance: AxiosInstance) {
       state.http = instance;
+    },
+    HTTP_REQUEST(state, request: EntryParams) {
+      state.isInWechat = request.isInWechat;
+      state.isMobileDevice = request.isMobileDevice;
     },
     setAsyncTransition(state, data) {
       // eslint-disable-next-line no-param-reassign

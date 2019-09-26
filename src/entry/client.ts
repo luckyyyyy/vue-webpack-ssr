@@ -9,17 +9,23 @@
 import Vue from 'vue';
 import createApp from '@/entry/main';
 import { AUTH_STATE } from '@/config/auth';
-import { getRedirectUri } from '@/utils';
+import { getRedirectUri, isMobileDevice, isInWechat } from '@/utils';
 import { createAsyncTransition } from '@/components/async-transition';
 
 
-const { app, router, store, http } = createApp();
+const entryParams = {
+  isMobileDevice: isMobileDevice(navigator.userAgent),
+  isInWechat: isInWechat(navigator.userAgent),
+};
+
+const { app, router, store, http } = createApp(entryParams);
 const AsyncTransition = createAsyncTransition(store);
 
 if (window.__INITIAL_STATE__) {
   store.replaceState(window.__INITIAL_STATE__);
 }
-store.commit('setHttpInstance', http);
+store.commit('HTTP_INSTANCE', http);
+store.commit('HTTP_REQUEST', entryParams);
 
 router.onReady(() => {
   router.beforeResolve((to, from, next) => {

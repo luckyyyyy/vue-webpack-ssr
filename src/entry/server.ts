@@ -10,13 +10,20 @@ import createApp from '@/entry/main';
 import { HttpRedirectException } from '@/utils/http/redirect';
 import { UnauthorizedHttpException, NotFoundHttpException } from '@/utils/http/error';
 import { AUTH_STATE, AUTH_URL } from '@/config/auth';
-import { resolveRedirectUri, getRedirectUri } from '@/utils';
+import { resolveRedirectUri, getRedirectUri, isMobileDevice, isInWechat } from '@/utils';
+
 
 // eslint-disable-next-line no-async-promise-executor
 export default context => new Promise(async (resolve, reject) => {
   const { request } = context;
-  const { app, router, store, http } = createApp(request);
-  store.commit('setHttpInstance', http);
+  const entryParams = {
+    headers: request.headers,
+    isInWechat: isInWechat(request.headers['user-agent']),
+    isMobileDevice: isMobileDevice(request.headers['user-agent']),
+  };
+  const { app, router, store, http } = createApp(entryParams);
+  store.commit('HTTP_INSTANCE', http);
+  store.commit('HTTP_REQUEST', entryParams);
 
   let { url } = context;
   if (url.indexOf('') === 0) {

@@ -99,7 +99,7 @@ const INJECT_USER_HEADERS = [
  * @param request
  * @return {AxiosInstance}
  */
-export const createAxios = (request: any): AxiosInstance => {
+export const createAxios = (headers): AxiosInstance => {
   const config: AxiosRequestConfig = {
     baseURL: `${isServer ? process.env.API_GATEWAY : ''}/api`,
     // timeout: 5000,
@@ -108,8 +108,8 @@ export const createAxios = (request: any): AxiosInstance => {
   if (isServer) {
     config.headers = {};
     INJECT_USER_HEADERS.forEach((header) => {
-      if (request.headers[header]) {
-        config.headers[header] = request.headers[header];
+      if (headers[header]) {
+        config.headers[header] = headers[header];
       }
     });
   }

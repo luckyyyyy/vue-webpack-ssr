@@ -35,7 +35,7 @@ const routes = Array.prototype.concat(
 //   }
 // });
 
-export const createRouter = (): VueRouter => new VueRouter({
+export const createRouter = (isMobileDevice?: boolean): VueRouter => new VueRouter({
   base: __dirname,
   routes,
   mode: 'history',

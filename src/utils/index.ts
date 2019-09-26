@@ -6,8 +6,20 @@
  */
 import { AUTH_URL } from '@/config/auth';
 
+/**
+ * 判断是否是开发环境
+ * @return {bool}
+ */
+
 export const isDevelop = process.env.NODE_ENV !== 'production';
+
+/**
+ * 判断是否是node环境
+ * @return {bool}
+ */
+
 export const isServer = process.env.VUE_ENV === 'server';
+
 
 export const resolveRedirectUri = (uri?: string | (string | null)[]): string => {
   if (typeof uri === 'string') {
@@ -21,4 +33,27 @@ export const getRedirectUri = (uri?: string | (string | null)[]): string => {
     return `${AUTH_URL}?redirect_uri=${encodeURIComponent(uri)}`;
   }
   return `${AUTH_URL}?redirect_uri=${encodeURIComponent('/')}`;
+};
+
+
+/**
+ * 判断是否是微信中
+ * @return {bool}
+ */
+export const isInWechat = (userAgent?: string): boolean => {
+  if (userAgent) {
+    return /micromessenger/i.test(userAgent.toLowerCase());
+  }
+  return false;
+};
+
+/**
+ * 判断是否是移动设备
+ * @return {bool}
+ */
+export const isMobileDevice = (userAgent?: string): boolean => {
+  if (userAgent) {
+    return /mobile/i.test(userAgent.toLowerCase());
+  }
+  return false;
 };

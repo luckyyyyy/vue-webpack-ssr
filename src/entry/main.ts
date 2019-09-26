@@ -20,10 +20,17 @@ import '@/styles/test.less';
 
 Vue.mixin(headMixin);
 
-export default (request?: any) => {
+export interface EntryParams {
+  headers?: { [key: string]: string };
+  isInWechat: boolean;
+  isMobileDevice: boolean;
+}
+
+export default (request: EntryParams) => {
   const store = createStore();
-  const router = createRouter();
-  const http = createAxios(request);
+  const router = createRouter(request.isMobileDevice);
+  const http = createAxios(request.headers);
+
 
   sync(store, router);
 
