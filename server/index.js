@@ -71,7 +71,7 @@ app.get('*', async (req, res) => {
       log.push(`Error during render: ${req.url}`)
       log.push(headers.join("\n"));
       log.push(err.stack);
-      if (process.env.PERFMA_ENV || (err.statusCode === 500 && err.extra && err.extra.config && err.extra.config.headers)) {
+      if ((process.env.PERFMA_ENV || err.statusCode === 500) && err.extra && err.extra.config && err.extra.config.headers) {
         log.push("\nError extra:");
         log.push(`${err.extra.config.method.toLocaleUpperCase()}: ${err.extra.config.url}`);
         if (err.extra.config.data) {
