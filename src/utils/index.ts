@@ -8,14 +8,14 @@ import { AUTH_URL } from '@/config/auth';
 
 /**
  * 判断是否是开发环境
- * @return {bool}
+ * @return {boolean}
  */
 
 export const isDevelop = process.env.NODE_ENV !== 'production';
 
 /**
  * 判断是否是node环境
- * @return {bool}
+ * @return {boolean}
  */
 
 export const isServer = process.env.VUE_ENV === 'server';
@@ -38,7 +38,7 @@ export const getRedirectUri = (uri?: string | (string | null)[]): string => {
 
 /**
  * 判断是否是微信中
- * @return {bool}
+ * @return {boolean}
  */
 export const isInWechat = (userAgent?: string): boolean => {
   if (userAgent) {
@@ -49,7 +49,7 @@ export const isInWechat = (userAgent?: string): boolean => {
 
 /**
  * 判断是否是移动设备
- * @return {bool}
+ * @return {boolean}
  */
 export const isMobileDevice = (userAgent?: string): boolean => {
   if (userAgent) {

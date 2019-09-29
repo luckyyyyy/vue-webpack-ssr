@@ -8,6 +8,7 @@ import { VNode } from 'vue';
 import { Component, Vue } from 'vue-property-decorator';
 import { namespace } from 'vuex-class';
 import Hello from '@/components/Hello';
+import TodoList from '@/components/todolist';
 import { BrowserHead } from '@/mixins/head';
 
 const commonModule = namespace('common');
@@ -50,6 +51,8 @@ export default class Index extends Vue {
         <Hello msg={this.msg} bug />
         <button onClick={this.onClick}>switch text</button>
         <div class="less"> less style test </div>
+        <h2>todolist</h2>
+        <TodoList />
         <p>*** 下面是一些路由过度的测试 可以自定义 asyncData 加载时的组件 ***</p>
         <p>
           <router-link to={{ name: 'loading-test' }}>loading-test</router-link>
