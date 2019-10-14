@@ -6,23 +6,23 @@
  */
 import { VNode } from 'vue';
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
+import { getModule } from '@/store/decorators';
+import { CommonModule } from '@/store/modules/common';
 import Hello from '@/components/Hello';
 import TodoList from '@/components/todolist';
 import { BrowserHead } from '@/mixins/head';
-
-const commonModule = namespace('common');
 
 @Component
 export default class Index extends Vue {
   private msg: string = 'hello world vue in typescript';
 
-  @commonModule.State
-  private text;
+  private CommonModuleInstance!: CommonModule;
 
-  @commonModule.Mutation
-  private setText;
-
+  public created(): void {
+    this.CommonModuleInstance = getModule(CommonModule, this.$store);
+    // this.CommonModuleInstance.
+    console.log(this.CommonModuleInstance.text);
+  }
 
   // eslint-disable-next-line class-methods-use-this
   // public serverPrefetch(): Promise<any> {
@@ -32,10 +32,9 @@ export default class Index extends Vue {
   //   });
   // }
 
-  // public static asyncData({ store, route }): Promise<any> {
-  //   return new Promise((resolve) => {
-  //     setTimeout(resolve, 100);
-  //   });
+  // public static async asyncData({ store, route }): Promise<any> {
+  //   const CommonModuleInstance = getModule(CommonModule, store);
+  //   await CommonModuleInstance.test();
   // }
 
   public browserHead(): BrowserHead {
@@ -44,12 +43,23 @@ export default class Index extends Vue {
     };
   }
 
+  private onClick(): void {
+    this.msg = 'switch text done !!!';
+    this.CommonModuleInstance.setText('hello world!!!');
+  }
+
+  private onClick2(): void {
+    this.CommonModuleInstance.test();
+  }
+
   public render(): VNode {
     return (
       <div class="view">
-        <h1>{ this.text }</h1>
+        <h1>{ this.CommonModuleInstance.text }</h1>
         <Hello msg={this.msg} bug />
         <button onClick={this.onClick}>switch text</button>
+        <button onClick={this.onClick2}>test2</button>
+
         <div class="less"> less style test </div>
         <h2>todolist</h2>
         <TodoList />
@@ -65,10 +75,5 @@ export default class Index extends Vue {
         </p>
       </div>
     );
-  }
-
-  private onClick(): void {
-    this.msg = 'switch text done !!!';
-    this.setText('hello world!!!');
   }
 }

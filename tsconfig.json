@@ -26,7 +26,7 @@
     // 在表达式和声明上有隐含的any类型时报错
     "noImplicitAny": false,
     // 不是函数的所有返回路径都有返回值时报错。
-    "noImplicitReturns": true,
+    "noImplicitReturns": false,
     // 从 tslib 导入外部帮助库: 比如__extends，__rest等
     "importHelpers": true,
     // 编译过程中打印文件名

@@ -9,17 +9,6 @@ const utils = require('../utils');
 module.exports = {
   // chunks: 'initial', // initial all async
   cacheGroups: {
-    vendor: {
-      filename: utils.assetsPath('js/vendor.[chunkhash:24].js'),
-      name: 'vendor',
-      test: /node_modules/,
-      // test: m => {
-      //   console.log(m)
-      //   return m.constructor.name !== 'CssModule';
-      // },
-      chunks: 'initial',
-      priority: -10,
-    },
     styles: {
       test: m => m.constructor.name === 'CssModule',
       name: process.env.VUE_SSR ? 'all' : 'commons',
@@ -28,22 +17,14 @@ module.exports = {
       reuseExistingChunk: true,
       enforce: true,
     },
-    vue: {
-      filename: utils.assetsPath('js/vue-family-bundle.js'),
-      name: 'vue-family-bundle',
-      test: /[\\/]node_modules[\\/](vue|vue-router|vuex|vuex-router-sync|vuex-class|vue-class-component|vue-property-decorator)[\\/]/,
-      chunks: 'initial',
-    },
-    route: {
-      filename: utils.assetsPath('js/route.[chunkhash:24].js'),
-      name: 'route',
-      test: /[\\/]src[\\/](router)[\\/]/,
-      chunks: 'initial',
-    },
-    store: {
-      filename: utils.assetsPath('js/store.[chunkhash:24].js'),
-      name: 'store',
-      test: /[\\/]src[\\/](store)[\\/]/,
+    vendor: {
+      filename: utils.assetsPath('js/vendor.[chunkhash:24].js'),
+      name: 'vendor',
+      test: /node_modules/,
+      // test: m => {
+      //   console.log(m)
+      //   return m.constructor.name !== 'CssModule';
+      // },
       chunks: 'initial',
     },
     default: {

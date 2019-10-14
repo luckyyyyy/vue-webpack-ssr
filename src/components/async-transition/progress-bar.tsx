@@ -6,10 +6,7 @@
  */
 import { VNode } from 'vue';
 import { Component, Vue } from 'vue-property-decorator';
-import { namespace } from 'vuex-class';
 import style from './progress-bar.module.scss';
-
-const UserModule = namespace('user');
 
 
 @Component
@@ -22,7 +19,6 @@ export default class Progress extends Vue {
   private failedColor: string = '#ff000';
   private _timer?: number;
   private _hide?: number;
-  @UserModule.State private user;
 
   public render(): VNode {
     return (

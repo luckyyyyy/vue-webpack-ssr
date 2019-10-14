@@ -20,7 +20,7 @@ export interface MStore {
   isInWechat: boolean;
   isMobileDevice: boolean;
   'async-transition': Component;
-  user: CommonState;
+  common: CommonState;
 }
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
