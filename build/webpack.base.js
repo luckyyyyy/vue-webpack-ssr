@@ -6,7 +6,6 @@
  */
 
 const webpack = require('webpack');
-const FilterWarningsPlugin = require('webpack-filter-warnings-plugin'); // 连这种东西都需要一个插件 SX
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const utils = require('./utils');
@@ -93,9 +92,6 @@ const webpackConfig = {
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new VueLoaderPlugin(),
     new webpack.EnvironmentPlugin(config.env),
-    new FilterWarningsPlugin({
-      exclude: /mini-css-extract-plugin[^]*Conflicting order between:/,
-    }),
   ],
 };
 if (utils.isDevelop) {

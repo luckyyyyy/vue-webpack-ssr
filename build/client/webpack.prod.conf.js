@@ -45,6 +45,7 @@ const webpackConfig = merge(webpackBaseConfig, {
       return `module-${modules[0].id}`;
     }),
     new MiniCssExtractPlugin({
+      ignoreOrder: true,
       filename: utils.assetsPath('css/[name].[contenthash].css'),
     }),
     // copy custom static assets

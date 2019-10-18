@@ -33,6 +33,7 @@ const webpackConfig = merge(webpackBaseConfig, {
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     // extract css into its own file
     new MiniCssExtractPlugin({
+      ignoreOrder: true,
       filename: utils.assetsPath('css/[name].css'),
     }),
   ],
