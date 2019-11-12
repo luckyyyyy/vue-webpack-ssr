@@ -15,7 +15,7 @@ export default class TodoList extends VueComponent {
 
   public onSubmit(e: Event): boolean {
     e.preventDefault();
-    e.stopPropagation();
+    // e.stopPropagation();
     this.data.push(this.text);
     return false;
   }

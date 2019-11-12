@@ -21,6 +21,7 @@
  * 支持 ESLint 和 StyleLint，默认关闭。
  * 支持 HMR tsx组件，ts组件，vue组件。
  * 基于最新 css-loader 配置支持 SSR，支持css-module。
+ * 支持 vuex axios 类型推导。
 
 ## 参考文档
 
@@ -43,19 +44,18 @@
 import { VNode } from 'vue';
 import { Component, Vue } from 'vue-property-decorator';
 import Hello from '@/components/Hello';
-import { namespace } from 'vuex-class';
+import { getModule } from '@/store/decorators';
+import { CommonModule } from '@/store';
 
-const commonModule = namespace('common');
 
 @Component
 export default class Index extends Vue {
   private msg: string = 'hello world vue in typescript';
+  private CommonModuleInstance!: CommonModule;
 
-  @commonModule.State
-  private text;
-
-  @commonModule.Mutation
-  private setText;
+  public created(): void {
+    this.CommonModuleInstance = getModule(CommonModule, this.$store);
+  }
 
   /* eslint-disable-next-line class-methods-use-this */
   public serverPrefetch(): Promise<any> {
@@ -74,7 +74,7 @@ export default class Index extends Vue {
   public render(): VNode {
     return (
       <div class="view">
-        <h1>{ this.text }</h1>
+        <h1>{ this.CommonModuleInstance.text }</h1>
         <Hello msg={this.msg} bug />
         <button onClick={this.onClick}>switch text</button>
       </div>
@@ -83,7 +83,7 @@ export default class Index extends Vue {
 
   private onClick(): void {
     this.msg = 'switch text done !!!';
-    this.setText('hello world!!!');
+    this.CommonModuleInstance.setText('hello world!!!');
   }
 }
 ```

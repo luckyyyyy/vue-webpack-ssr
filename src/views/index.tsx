@@ -56,9 +56,9 @@ export default class Index extends Vue {
     return (
       <div class="view">
         <h1>{ this.CommonModuleInstance.text }</h1>
-        <Hello msg={this.msg} bug />
+        <Hello msg={this.msg} />
         <button onClick={this.onClick}>switch text</button>
-        <button onClick={this.onClick2}>test2</button>
+        <button onClick={this.onClick2}>action sleep 500ms switch text</button>
 
         <div class="less"> less style test </div>
         <h2>todolist</h2>

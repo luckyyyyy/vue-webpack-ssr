@@ -13,7 +13,6 @@ import style from '@/styles/app.module.scss'; // css module
 export default class App extends Vue {
   @State('async-transition') private AsyncTransition
 
-
   // eslint-disable-next-line class-methods-use-this
   public render(): VNode {
     const { LoadingComponent, ErrorComponent } = this.AsyncTransition;
