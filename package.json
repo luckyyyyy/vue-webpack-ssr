@@ -12,9 +12,8 @@
     "start": "node server",
     "lint": "eslint --ext .js,.vue,.jsx --cache --cache-location node_modules/.cache/.eslintcache src",
     "lint:style": "stylelint src/**/*.{less,vue} --fix",
-    "prebuild": "npm run check",
-    "prebuild:ssr": "npm run check",
-    "check": "node build/check-version"
+    "prebuild": "check-versions-of-dep",
+    "prebuild:ssr": "check-versions-of-dep"
   },
   "engines": {
     "node": ">=8.0",
@@ -55,6 +54,7 @@
     "babel-loader": "^8.0.5",
     "cache-loader": "^2.0.1",
     "chalk": "^2.4.1",
+    "check-versions-of-dep": "^1.0.1",
     "compression-webpack-plugin": "^1.1.11",
     "connect-history-api-fallback": "^1.5.0",
     "copy-webpack-plugin": "^4.5.2",
