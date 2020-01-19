@@ -63,5 +63,8 @@
   "eslint.options": {
     "configFile": ".eslintrc.js"
   },
-  "stylelint.enable": false // 还没有自动修复功能 先禁了
+  "stylelint.enable": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  } // 还没有自动修复功能 先禁了
 }
