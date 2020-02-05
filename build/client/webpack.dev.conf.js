@@ -28,7 +28,6 @@ const webpackConfig = merge(webpackBaseConfig, {
       name: 'Client-Dev',
     }),
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
-    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
     // extract css into its own file
