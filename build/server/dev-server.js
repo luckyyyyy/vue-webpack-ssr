@@ -18,7 +18,7 @@ const portfinder = require('portfinder');
 const { createBundleRenderer } = require('vue-server-renderer');
 const webpack = require('webpack');
 const MFS = require('memory-fs');
-const proxyMiddleware = require('http-proxy-middleware');
+const { createProxyMiddleware } = require('http-proxy-middleware');
 const clientConfig = require('./webpack.client.conf');
 const serverConfig = require('./webpack.server.conf');
 const config = require('../config');
@@ -139,7 +139,7 @@ Object.keys(config.proxy).forEach((context) => {
   if (typeof options === 'string') {
     options = { target: options };
   }
-  app.use(proxyMiddleware(options.filter || context, options));
+  app.use(createProxyMiddleware(options.filter || context, options));
 });
 
 // watch and update server renderer

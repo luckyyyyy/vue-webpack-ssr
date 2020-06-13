@@ -16,7 +16,7 @@ import { EntryParams } from '@/entry/main';
 Vue.use(Vuex);
 
 export interface MStore {
-  http: AxiosInstance;
+  http: AxiosInstance | null;
   isInWechat: boolean;
   isMobileDevice: boolean;
   'async-transition': Component;

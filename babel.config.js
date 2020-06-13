@@ -7,17 +7,16 @@
 
 module.exports = {
   presets: [
-    [require('@babel/preset-env'), {
+    ['@babel/preset-env', {
       useBuiltIns: 'usage',
       // useBuiltIns: 'entry',
       corejs: 3,
     }],
-    require('@babel/preset-typescript'),
-    require('@vue/babel-preset-jsx'),
+    '@babel/preset-typescript',
+    '@vue/babel-preset-jsx',
   ],
   plugins: [
     // require('@babel/plugin-syntax-jsx'),
-    require('@babel/plugin-syntax-dynamic-import'),
+    '@babel/plugin-syntax-dynamic-import',
   ],
 };
-
