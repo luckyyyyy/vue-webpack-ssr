@@ -29,12 +29,6 @@ const webpackConfig = merge(webpackBaseConfig, {
     }),
     // https://github.com/glenjamin/webpack-hot-middleware#installation--usage
     new webpack.HotModuleReplacementPlugin(),
-    new webpack.NamedModulesPlugin(), // HMR shows correct file names in console on update.
-    // extract css into its own file
-    new MiniCssExtractPlugin({
-      ignoreOrder: true,
-      filename: utils.assetsPath('css/[name].css'),
-    }),
   ],
 });
 

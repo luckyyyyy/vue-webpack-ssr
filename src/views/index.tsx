@@ -6,7 +6,7 @@
  */
 import { VNode } from 'vue';
 import { Component, Vue } from 'vue-property-decorator';
-import { getModule } from '@/store/decorators';
+import { getModule } from 'vuex-module-decorators';
 import { CommonModule } from '@/store/modules/common';
 import Hello from '@/components/Hello';
 import TodoList from '@/components/todolist';

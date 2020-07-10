@@ -23,7 +23,7 @@ export default class Hello extends VueComponent<HelloProps> {
     return (
       <div>
         <div class="msg">{ this.msg }</div>
-        <div>元类型反射测试：当前是{ this.bug.toString() }</div>
+        <b>元类型反射测试：当前是 { this.bug.toString() }</b>
       </div>
     );
   }

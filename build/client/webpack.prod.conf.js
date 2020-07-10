@@ -27,35 +27,17 @@ const webpackConfig = merge(webpackBaseConfig, {
       name: 'Client-Prod',
       color: '#569fff'
     }),
-    // https://github.com/vuejs/vue-cli/issues/1916#issuecomment-407693467
-    // https://segmentfault.com/a/1190000015919928#articleHeader10
-    new webpack.NamedChunksPlugin((chunk) => {
-      if (chunk.name) {
-        return chunk.name;
-      }
-      const modules = Array.from(chunk.modulesIterable);
-      if (modules.length > 1) {
-        const hash = require('hash-sum');
-        const joinedHash = hash(modules.map(m => m.id).join('_'));
-        let len = nameLength;
-        while (seen.has(joinedHash.substr(0, len))) len++;
-        seen.add(joinedHash.substr(0, len));
-        return `chunk-${joinedHash.substr(0, len)}`;
-      }
-      return `module-${modules[0].id}`;
-    }),
-    new MiniCssExtractPlugin({
-      ignoreOrder: true,
-      filename: utils.assetsPath('css/[name].[contenthash].css'),
-    }),
     // copy custom static assets
-    new CopyWebpackPlugin([
-      {
+    new CopyWebpackPlugin({
+      patterns: [{
         from: config.publicDirectory,
         to: config.assetsRoot,
-        ignore: ['.*'],
-      },
-    ]),
+        globOptions: {
+          dot: false,
+          // gitignore: true, // 有bug
+        },
+      }],
+    }),
   ],
 });
 

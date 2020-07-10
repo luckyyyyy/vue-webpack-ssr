@@ -18,11 +18,6 @@ const cacheLoader = (path) => {
 
 // Generate loaders for standalone style files (outside of .vue)
 const styleLoaders = (options = {}) => {
-  const cssModules = {
-    modules: {
-      localIdentName: '[path][name]__[local]--[hash:base64:5]',
-    }
-  }
 
   const map = {
     scss: 'sass-loader',
@@ -42,34 +37,23 @@ const styleLoaders = (options = {}) => {
     },
   } : 'vue-style-loader';
 
-  // css module
-  const cssModulesRules = ['css', 'scss', 'less', 'styl', 'stylus'].map((extension) => {
-    let rule = {
-      test: new RegExp(`\\.module.${extension}$`),
-      use: [
-        cacheLoader('css-loader'),
-        { loader: 'css-loader', options: { onlyLocals: options.onlyLocals, ...cssModules }},
-        'postcss-loader'
-      ],
-    };
-    if (!options.onlyLocals) {
-      rule.use.unshift(devLoader)
-    }
-    if (map[extension]) {
-      rule.use.push(map[extension]);
-    }
-    return rule;
-  });
-
-  // 非 module
-  const cssRules = ['css', 'scss', 'less', 'styl', 'stylus'].map((extension) => {
-    let rule = {
+  const cssRules = ['less', 'css', 'scss', 'styl', 'stylus'].map((extension) => {
+    const rule = {
       test: new RegExp(`\\.${extension}$`),
-      exclude: new RegExp(`\\.module.${extension}$`),
+      // exclude: new RegExp(`\\.module.${extension}$`),
       use: [
         cacheLoader('css-loader'),
-        { loader: 'css-loader', options: { onlyLocals: options.onlyLocals } },
-        'postcss-loader'
+        {
+          loader: 'css-loader',
+          options: {
+            onlyLocals: options.onlyLocals,
+            modules: {
+              auto: true,
+              localIdentName: '[path][name]__[local]--[hash:base64:5]',
+            },
+          },
+        },
+        'postcss-loader',
       ],
     };
     if (!options.onlyLocals) {
@@ -80,8 +64,7 @@ const styleLoaders = (options = {}) => {
     }
     return rule;
   });
-
-  return cssRules.concat(...cssModulesRules)
+  return cssRules;
 };
 
 const vueLoaders = () => [{
@@ -105,6 +88,15 @@ const vueLoaders = () => [{
   ]
 }];
 
+const threadLoader = {
+  loader: 'thread-loader',
+  options: {
+      // there should be 1 cpu for the fork-ts-checker-webpack-plugin
+      workers: require('os').cpus().length - 1,
+      poolTimeout: utils.isDevelop && Infinity || 500,
+  },
+}
+
 const scriptLoaders = () => {
   const includes = [
     utils.fullPath('config'),
@@ -114,7 +106,11 @@ const scriptLoaders = () => {
   return [
     {
       test: /\.m?jsx?$/,
-      use: [cacheLoader('babel-loader'), 'babel-loader', 'vue-jsx-hot-loader'],
+      use: [
+        cacheLoader('babel-loader'),
+        'babel-loader',
+        threadLoader,
+      ],
       include: includes,
     },
     {
@@ -123,11 +119,13 @@ const scriptLoaders = () => {
       use: [
         cacheLoader('ts-loader'),
         'babel-loader',
-        'vue-jsx-hot-loader',
+        threadLoader,
         {
           loader: 'ts-loader',
           options: {
-            appendTsSuffixTo: [/\.vue$/],
+            happyPackMode: true,
+            transpileOnly: true,
+            appendTsSuffixTo: ['\\.vue$'],
           },
         },
       ],
@@ -136,20 +134,21 @@ const scriptLoaders = () => {
       test: /\.tsx$/,
       include: includes,
       use: [
-        cacheLoader('ts-loader'),
+        cacheLoader('tsx-loader'),
         'babel-loader',
-        'vue-jsx-hot-loader',
+        threadLoader,
         {
           loader: 'ts-loader',
           options: {
-            appendTsxSuffixTo: [/\.vue$/],
+            happyPackMode: true,
+            transpileOnly: true,
+            appendTsxSuffixTo: ['\\.vue$'],
           },
         },
       ],
     },
   ];
 };
-
 
 const eslintLoaders = options => [{
   test: /\.(js|vue|jsx)$/,

@@ -10,7 +10,7 @@
 // 由于服务端渲染的原因 暂时不可以使用 getModule + 动态模块 可由爬 issues 或者查看 nuxt 的方案
 // 现在我还没有时间去做调整
 // import { Module, VuexModule, Action, Mutation, MutationAction } from 'vuex-module-decorators';
-import { Module, VuexModule, Action, Mutation, MutationAction } from '@/store/decorators';
+import { Module, VuexModule, Action, Mutation, MutationAction } from 'vuex-module-decorators';
 
 import { MStore } from '@/store';
 

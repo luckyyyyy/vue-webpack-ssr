@@ -8,6 +8,7 @@
 const webpack = require('webpack');
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const utils = require('./utils');
 const loader = require('./utils/loader');
 const config = require('./config');
@@ -92,6 +93,7 @@ const webpackConfig = {
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new VueLoaderPlugin(),
     new webpack.EnvironmentPlugin(config.env),
+    new ForkTsCheckerWebpackPlugin()
   ],
 };
 if (utils.isDevelop) {

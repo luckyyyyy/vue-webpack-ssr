@@ -14,6 +14,7 @@ const loader = require('../utils/loader');
 const config = require('../config');
 const splitChunks = require('../config/splitChunks');
 const webpackBaseConfig = require('../webpack.base');
+const plugin = require('../utils/plugin');
 
 const webpackConfig = merge(webpackBaseConfig, {
   entry: config.clientEntry,
@@ -37,6 +38,8 @@ const webpackConfig = merge(webpackBaseConfig, {
   },
   plugins: [
     new webpack.HashedModuleIdsPlugin(),
+    plugin.namedChunksPlugin,
+    plugin.miniCssExtractPlugin,
     // generate dist index.html with correct asset hash for caching.
     // you can customize output by editing /index.html
     // see https://github.com/ampedandwired/html-webpack-plugin
